@@ -1,45 +1,62 @@
-import { Card,Row,Col } from 'antd';
+import React from 'react'
 import Router from 'next/router'
-import movieData from '../data/movieData'
+import { Row } from 'antd'
+import { getMovieData, searchMovie } from '../lib/Firebase'
+import CardDetail from './CardDetail'
+import Searchbar from './SearchBar';
 
-const { Meta } = Card;
+class Home extends React.Component {
+  state = {
+    movie: null
+  }
 
-const onCardClick = (name, src, detail) => {
-  return (e) => {
-    e.preventDefault()
-    Router.push({
-      pathname: '/detail',
-      query: {
-        name,
-        src,
-        detail
-      }
-    })
+  componentDidMount(){
+    // this.getMovie()
+    this.onSearch()
+  }
+
+  onSearch(value){
+    searchMovie(value).then((res)=>{
+      this.setState({
+          movie: res
+        })
+      })
+  }
+
+  onCardClick(name, src, detail){
+    return (e) => {
+      e.preventDefault()
+      Router.push({
+        pathname: '/detail',
+        query: {
+          name,
+          src,
+          detail
+        }
+      })
+    }
+  }
+
+  // getMovie() {
+  //   getMovieData().then((res)=>{
+  //   this.setState({
+  //       movie: res
+  //     })
+  //   })
+  // }
+
+  render(){
+    return(
+      <div>
+        <Searchbar onSearch={this.onSearch} />
+        <div style={{ background: '#ECECEC', padding: '30px' }}>
+          <Row type="flex" justify="space-around">
+            {this.state.movie ? <CardDetail data={this.state.movie} onCardClick={this.onCardClick} /> : <h2>Loading...</h2>}
+          </Row>
+        </div>
+      </div>
+    )
   }
 }
 
-const renderCard = () => (
-  movieData.map((idx)=>
-  <Col span={5}><Card
-  hoverable
-  onClick={onCardClick(idx.name, idx.src, idx.detail)}
-  style={{ width: 240 }}
-  cover={<img alt={idx.name} src={idx.src} />}
->
-  <Meta
-    title={idx.name}
-    description={idx.detail}
-  />
-</Card>
-</Col>
-))
-
-const Homecard = () => (
-    <div style={{ background: '#ECECEC', padding: '30px' }}>
-      <Row type="flex" justify="space-around">
-          {renderCard()}
-    </Row>
-  </div>
-)
-
-export default Homecard
+export default Home
