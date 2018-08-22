@@ -1,6 +1,7 @@
 import React from 'react'
-import Home from '../src/components/Home'
 import { withRouter } from 'next/router'
+import Home from '../src/components/Home'
+import Searchbar from '../src/components/SearchBar';
 
 class index extends React.Component {
 componentDidMount() {
@@ -10,7 +11,7 @@ componentDidMount() {
   render() {
     return(
         <div>
-        <Home />
+          <Home />
         </div>
     )
   }}

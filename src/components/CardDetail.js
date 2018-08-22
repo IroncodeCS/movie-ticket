@@ -2,20 +2,19 @@ import { Card,Col } from 'antd'
 
 const { Meta } = Card;
 
-const CardDetail = ({data, onCardClick}) => (
-  data.map((value, index)=>
+const CardDetail = ({data, onCardClick, index}) => (
     <Col key={`col-card-${index}`} span={5}>
       <Card
         hoverable
-        onClick={onCardClick(value.name, value.src, value.detail)}
+        onClick={onCardClick ? onCardClick(data.name, data.src, data.date) : null}
         style={{ width: 240 }}
-        cover={<img alt={value.name} src={value.src} />}
+        cover={<img alt={data.name} src={data.src} />}
       >
         <Meta
-          title={value.name}
-          description={value.detail}
+          title={data.name}
+          description={`วันที่เข้าฉาย: ${data.date}`}
         />
       </Card>
-    </Col>)
+    </Col>
 )
 export default CardDetail

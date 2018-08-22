@@ -1,3 +1,4 @@
+import _ from 'lodash'
 import firebase from 'firebase/app'
 import 'firebase/auth'
 import 'firebase/database'
@@ -15,14 +16,14 @@ if (!firebase.apps.length) {
   firebase.initializeApp(config)
 }
 const Firebase = () => {
-  const db = firebase.database().ref()
+  const db = firebase.database().ref('movies')
   return db
 }
 
-export const getMovieData = (db) => {
+export const getMovieData = () => {
   const movieData = new Promise((resolve) => {
-    Firebase().once('value').then((snap) => {
-      resolve(snap.val().movies)
+    Firebase().orderByChild("name").startAt().on('value', (snap) => {
+      resolve(snap.val())
     })
   })
  return movieData
@@ -30,9 +31,10 @@ export const getMovieData = (db) => {
 
 export const searchMovie = (value) => {
   const movieData = new Promise((resolve) => {
-    const db = firebase.database().ref(`movies/${value}`)
-    db.once('value').then((snap) => {
-      resolve(snap.val())
+    Firebase().orderByChild("name").equalTo(value).on("value", (snap) => {
+      snap.forEach(element => {
+        resolve([element.val()])
+      })
     })
   })
  return movieData

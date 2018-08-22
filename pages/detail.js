@@ -1,13 +1,12 @@
 import React from 'react'
 import { withRouter } from 'next/router'
-import Firebase from '../src/lib/Firebase';
+import CardDetail from '../src/components/CardDetail'
 
 const detail = (router) => {
-  const db = Firebase()
-  const { name, src, detail } = router.url.query
+  const data = router.router.query
   return (
     <div>
-      Firebase
+      <CardDetail data={data}/>
     </div>
 )}
 

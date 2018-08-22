@@ -1,26 +1,18 @@
-import React from 'react'
+import {Component} from 'react'
 import Router from 'next/router'
 import { Row } from 'antd'
-import { getMovieData, searchMovie } from '../lib/Firebase'
+import { connect } from 'react-redux'
+import { getMovieData } from '../lib/Firebase'
 import CardDetail from './CardDetail'
-import Searchbar from './SearchBar';
+import Searchbar from './SearchBar'
+import { updateMovie, updateMovieList } from '../action'
 
-class Home extends React.Component {
-  state = {
-    movie: null
+class Home extends Component {
+  state={
+    isData: false
   }
-
   componentDidMount(){
-    // this.getMovie()
-    this.onSearch()
-  }
-
-  onSearch(value){
-    searchMovie(value).then((res)=>{
-      this.setState({
-          movie: res
-        })
-      })
+    this.getMovie()
   }
 
   onCardClick(name, src, detail){
@@ -37,21 +29,20 @@ class Home extends React.Component {
     }
   }
 
-  // getMovie() {
-  //   getMovieData().then((res)=>{
-  //   this.setState({
-  //       movie: res
-  //     })
-  //   })
-  // }
+  getMovie() {
+    getMovieData().then((res)=>{
+      const {dispatch} = this.props
+      dispatch(updateMovie(res))
+    })
+  }
 
   render(){
     return(
       <div>
-        <Searchbar onSearch={this.onSearch} />
+        <Searchbar />
         <div style={{ background: '#ECECEC', padding: '30px' }}>
           <Row type="flex" justify="space-around">
-            {this.state.movie ? <CardDetail data={this.state.movie} onCardClick={this.onCardClick} /> : <h2>Loading...</h2>}
+    {this.props.isData ? this.props.movieData.map((value, index)=><CardDetail data={value} onCardClick={this.onCardClick} index={index}/>) : <h2>Loading...</h2>}
           </Row>
         </div>
       </div>
@@ -59,4 +50,9 @@ class Home extends React.Component {
   }
 }
 
-export default Home
+const mapStateToProps = state => ({
+  movieData: state.movieData,
+  isData: state.isData
+})
+
+export default connect(mapStateToProps)(Home)
