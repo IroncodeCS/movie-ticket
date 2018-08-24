@@ -7,10 +7,13 @@
   "license": "MIT",
   "scripts": {
     "dev": "next",
-    "build": "next build",
-    "start": "next start"
+    "build": "NODE_ENV=production next build",
+    "start": "next start",
+    "export": "next export -o dist"
   },
   "dependencies": {
+    "@babel/cli": "7.0.0-beta.51",
+    "@babel/core": "7.0.0-beta.51",
     "@zeit/next-css": "^0.2.0",
     "antd": "^3.8.1",
     "axios": "^0.18.0",
